@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incognito</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+        main {
+            padding: 1rem;
+        }
+        .thumbnail {
+            display: inline-block;
+            margin: 0.5rem;
+            text-align: center;
+        }
+        .thumbnail img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .title {
+            margin-top: 0.5rem;
+        }
+        #search-form {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        #search-input {
+            padding: 0.5rem;
+            width: 60%;
+        }
+        #search-button {
+            padding: 0.5rem;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Incognito</h1>
+    </header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/gs/">Games</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/settings/">Settings</a>
+        <a href="/support/">Support</a>
+    </nav>
+    <main>
+        <div id="search-form">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="content">
+            <!-- Content will be loaded here -->
+        </div>
+    </main>
+    <script>
+        // Simplified JavaScript functionality
+        const routes = {
+            '/': 'index.html',
+            '/gs/': 'gs.html',
+            '/privacy/': 'privacy.html',
+            '/settings/': 'settings.html',
+            '/support/': 'support.html'
+        };
+
+        const engines = {
+            google: 'https://www.google.com/search?q=',
+            youtube: 'https://www.youtube.com/results?search_query=',
+            bing: 'https://www.bing.com/search?q=',
+            brave: 'https://search.brave.com/search?q=',
+            twitter: 'https://twitter.com/search?q=',
+            reddit: 'https://www.reddit.com/search/?q=',
+        };
+
+        function loadPage(path) {
+            const file = routes[path];
+            if (file) {
+                fetch(file)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('content').innerHTML = html;
+                    })
+                    .catch(error => console.error('Error loading page:', error));
+            } else {
+                console.error('Page not found:', path);
+            }
+        }
+
+        function isUrl(val = '') {
+            if (/^http(s?):\/\//.test(val) || val.includes('.') && val.substr(0, 1) != ' ') return true;
+            return false;
+        }
+
+        function gateway(val, engine = 'google') {
+            const url = isUrl(val) ? (new URL(/^http(s?):\/\//.test(val) ? val : 'http://' + val).href) : `${engines[engine] || engines.google}${val}`;
+            window.location.href = url;
+        }
+
+        // Load the home page by default
+        loadPage('/');
+
+        // Handle navigation
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const path = event.target.getAttribute('href');
+                loadPage(path);
+            });
+        });
+
+        // Handle search
+        document.getElementById('search-button').addEventListener('click', () => {
+            const query = document.getElementById('search-input').value;
+            if (query) {
+                gateway(query);
+            }
+        });
+
+        document.getElementById('search-input').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                const query = document.getElementById('search-input').value;
+                if (query) {
+                    gateway(query);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
