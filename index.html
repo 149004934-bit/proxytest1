@@ -3,256 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ambient</title>
+    <title>Mepo Learn</title>
     <style>
+        html {
+        overflow-x: hidden;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #121212;
+            color: #ffffff; 
+            z-index: 1; 
         }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem;
+
+        .title {
+            text-align: center;
+            font-size: 5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 
+                3px 3px 5px rgba(255, 0, 0, 0.8),
+                -3px -3px 5px rgba(0, 0, 255, 0.8),
+                0px 0px 20px rgba(255, 255, 255, 1);
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Background Wave Effect */
+        .background-wave {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, rgba(0, 0, 139, 0.2), rgba(0, 0, 139, 0.4), transparent);
+            animation: waveEffect 8s infinite ease-in-out;
+            z-index: -1; /* Make sure it's behind all other content */
+        }
+
+        @keyframes waveEffect {
+            0% {
+                top: -50%;
+                left: -50%;
+                opacity: 0.3;
+            }
+            10% {
+                top: -47%;
+                left: -47%;
+                opacity: 0.35;
+            }
+            20% {
+                top: -43%;
+                left: -43%;
+                opacity: 0.4;
+            }
+            30% {
+                top: -40%;
+                left: -40%;
+                opacity: 0.45;
+            }
+            40% {
+                top: -35%;
+                left: -35%;
+                opacity: 0.5;
+            }
+            50% {
+                top: -30%;
+                left: -30%;
+                opacity: 0.55;
+            }
+            60% {
+                top: -35%;
+                left: -35%;
+                opacity: 0.5;
+            }
+            70% {
+                top: -40%;
+                left: -40%;
+                opacity: 0.45;
+            }
+            80% {
+                top: -43%;
+                left: -43%;
+                opacity: 0.4;
+            }
+            90% {
+                top: -47%;
+                left: -47%;
+                opacity: 0.35;
+            }
+            100% {
+                top: -50%;
+                left: -50%;
+                opacity: 0.3;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
             text-align: center;
         }
-        nav {
-            background-color: #444;
-            padding: 0.5rem;
+
+        h1 {
+            margin-bottom: 20px;
         }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            padding: 0.5rem;
+
+        .search-bar {
+            margin: 20px 0;
         }
-        main {
-            padding: 1rem;
+
+        .search-bar input {
+            width: 70%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            font-size: 16px;
         }
-        #search-form {
-            display: flex;
-            justify-content: center;
-            margin: 1rem 0;
-        }
-        #search-input {
-            padding: 0.5rem;
-            width: 60%;
-        }
-        #search-button {
-            padding: 0.5rem;
-            background-color: #333;
-            color: #fff;
+
+        .search-bar button {
+            padding: 10px 20px;
+            margin-left: 10px;
             border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+            font-size: 16px;
             cursor: pointer;
         }
-        .thumbnail {
-            display: inline-block;
-            margin: 0.5rem;
-            text-align: center;
+
+        .search-bar button:hover {
+            background-color: #555;
         }
-        .thumbnail img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
+
+        .game-frame-container {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
         }
-        .title {
-            margin-top: 0.5rem;
+
+        #fullscreen-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #fullscreen-button:hover {
+            background-color: #555;
+        }
+
+        #game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Ambient</h1>
-    </header>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/search">Search</a>
-        <a href="/a">Apps</a>
-        <a href="/g">Games</a>
-        <a href="/settings">Settings</a>
-    </nav>
-    <main>
-        <div id="search-form">
-            <input type="text" id="search-input" placeholder="Search...">
-            <button id="search-button">Search</button>
+    <div class="background-wave"></div> <!-- Background wave effect added here -->
+
+    <div class="container">
+        <h1 class="title">MepoHub</h1>
+        <p>Enter a URL to proxy and load:</p>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="url-input" placeholder="Enter the URL you want to proxy..." />
+            <button onclick="loadURL()">Load</button>
         </div>
-        <div id="content">
-            <!-- Content will be loaded here -->
+
+        <!-- Game Embed Frame Container -->
+        <div class="game-frame-container" id="game-frame-container">
+            <iframe id="game-frame"></iframe>
+            <button id="fullscreen-button" onclick="toggleFullScreen()">⛶</button>
         </div>
-    </main>
+    </div>
+
     <script>
-        // Simplified JavaScript functionality
-        const routes = {
-            '/': 'index.html',
-            '/search': 'search.html',
-            '/a': 'apps.html',
-            '/g': 'games.html',
-            '/settings': 'settings/general.html',
-            '/settings/general': 'settings/general.html',
-            '/404': 'err/404.html'
-        };
+        // Function to load the URL entered in the search bar
+        function loadURL() {
+            const urlInput = document.getElementById('url-input');
+            const gameFrameContainer = document.getElementById('game-frame-container');
+            const gameFrame = document.getElementById('game-frame');
 
-        function loadPage(path) {
-            const file = routes[path];
-            if (file) {
-                fetch(file)
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('content').innerHTML = html;
-                    })
-                    .catch(error => console.error('Error loading page:', error));
+            // Validate the URL input
+            if (!urlInput.value) {
+                alert('Please enter a URL.');
+                return;
+            }
+
+            try {
+                const encodedUrl = encodeURIComponent(urlInput.value); // Encode the URL
+                gameFrame.src = `/proxy?target=${encodedUrl}`; // Pass the URL to the proxy
+                gameFrameContainer.style.display = 'block'; // Show the iframe
+            } catch (error) {
+                alert('Invalid URL. Please try again.');
+                console.error('URL Parsing Error:', error);
+            }
+        }
+
+        function toggleFullScreen() {
+            const gameFrameContainer = document.getElementById('game-frame-container');
+            if (!document.fullscreenElement) {
+                gameFrameContainer.requestFullscreen().catch((err) => {
+                    alert(`Error attempting to enable fullscreen mode: ${err.message}`);
+                });
             } else {
-                loadPage('/404');
+                document.exitFullscreen();
             }
         }
 
-        function gateway(val) {
-            const url = new URL(val);
-            window.location.href = url.href;
-        }
-
-        // Load the home page by default
-        loadPage('/');
-
-        // Handle navigation
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', event => {
-                event.preventDefault();
-                const path = event.target.getAttribute('href');
-                loadPage(path);
-            });
-        });
-
-        // Handle search
-        document.getElementById('search-button').addEventListener('click', () => {
-            const query = document.getElementById('search-input').value;
-            if (query) {
-                gateway(query);
-            }
-        });
-
-        document.getElementById('search-input').addEventListener('keypress', (event) => {
+        // Trigger loadURL on Enter key press
+        document.getElementById('url-input').addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
-                const query = document.getElementById('search-input').value;
-                if (query) {
-                    gateway(query);
-                }
+                loadURL(); // Trigger loadURL on Enter key
             }
-        });
-
-        // Simulate server-side functionality
-        const server = {
-            createServer: () => {
-                console.log('Server created');
-            },
-            listen: (port, callback) => {
-                console.log(`Server listening on port ${port}`);
-                if (callback) callback();
-            },
-            close: () => {
-                console.log('Server closed');
-            }
-        };
-
-        const app = {
-            use: (middleware) => {
-                console.log('Middleware added:', middleware);
-            },
-            get: (path, callback) => {
-                console.log('Route added:', path);
-            },
-            post: (path, callback) => {
-                console.log('Route added:', path);
-            },
-            put: (path, callback) => {
-                console.log('Route added:', path);
-            },
-            delete: (path, callback) => {
-                console.log('Route added:', path);
-            },
-            options: (path, callback) => {
-                console.log('Route added:', path);
-            }
-        };
-
-        const bareServer = {
-            shouldRoute: (req) => {
-                return req.url.startsWith('/bare/');
-            },
-            routeRequest: (req, res) => {
-                console.log('Routing request:', req.url);
-            },
-            routeUpgrade: (req, socket, head) => {
-                console.log('Routing upgrade:', req.url);
-            },
-            close: () => {
-                console.log('Bare server closed');
-            }
-        };
-
-        // Simulate server setup
-        const __dirname = '/';
-        const PORT = 8080;
-
-        app.use((req, res, next) => {
-            console.log('Middleware executed:', req.url);
-            next();
-        });
-
-        app.get('/', (req, res) => {
-            console.log('GET /');
-            loadPage('/');
-        });
-
-        app.get('/search', (req, res) => {
-            console.log('GET /search');
-            loadPage('/search');
-        });
-
-        app.get('/a', (req, res) => {
-            console.log('GET /a');
-            loadPage('/a');
-        });
-
-        app.get('/g', (req, res) => {
-            console.log('GET /g');
-            loadPage('/g');
-        });
-
-        app.get('/settings', (req, res) => {
-            console.log('GET /settings');
-            loadPage('/settings');
-        });
-
-        app.get('/settings/general', (req, res) => {
-            console.log('GET /settings/general');
-            loadPage('/settings/general');
-        });
-
-        app.get('/404', (req, res) => {
-            console.log('GET /404');
-            loadPage('/404');
-        });
-
-        app.use((req, res, next) => {
-            console.log('404 Middleware executed:', req.url);
-            loadPage('/404');
-        });
-
-        server.listen(PORT, () => {
-            console.log(`Server listening on port ${PORT}`);
-        });
-
-        // Simulate shutdown
-        function shutdown() {
-            console.log('Shutting down server');
-            server.close();
-            bareServer.close();
-        }
-
-        // Simulate process events
-        window.addEventListener('beforeunload', (event) => {
-            shutdown();
         });
     </script>
 </body>
