@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambient</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+        main {
+            padding: 1rem;
+        }
+        #search-form {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        #search-input {
+            padding: 0.5rem;
+            width: 60%;
+        }
+        #search-button {
+            padding: 0.5rem;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .thumbnail {
+            display: inline-block;
+            margin: 0.5rem;
+            text-align: center;
+        }
+        .thumbnail img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .title {
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ambient</h1>
+    </header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/search">Search</a>
+        <a href="/a">Apps</a>
+        <a href="/g">Games</a>
+        <a href="/settings">Settings</a>
+    </nav>
+    <main>
+        <div id="search-form">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="content">
+            <!-- Content will be loaded here -->
+        </div>
+    </main>
+    <script>
+        // Simplified JavaScript functionality
+        const routes = {
+            '/': 'index.html',
+            '/search': 'search.html',
+            '/a': 'apps.html',
+            '/g': 'games.html',
+            '/settings': 'settings/general.html',
+            '/settings/general': 'settings/general.html',
+            '/404': 'err/404.html'
+        };
+
+        function loadPage(path) {
+            const file = routes[path];
+            if (file) {
+                fetch(file)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('content').innerHTML = html;
+                    })
+                    .catch(error => console.error('Error loading page:', error));
+            } else {
+                loadPage('/404');
+            }
+        }
+
+        function gateway(val) {
+            const url = new URL(val);
+            window.location.href = url.href;
+        }
+
+        // Load the home page by default
+        loadPage('/');
+
+        // Handle navigation
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const path = event.target.getAttribute('href');
+                loadPage(path);
+            });
+        });
+
+        // Handle search
+        document.getElementById('search-button').addEventListener('click', () => {
+            const query = document.getElementById('search-input').value;
+            if (query) {
+                gateway(query);
+            }
+        });
+
+        document.getElementById('search-input').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                const query = document.getElementById('search-input').value;
+                if (query) {
+                    gateway(query);
+                }
+            }
+        });
+
+        // Simulate server-side functionality
+        const server = {
+            createServer: () => {
+                console.log('Server created');
+            },
+            listen: (port, callback) => {
+                console.log(`Server listening on port ${port}`);
+                if (callback) callback();
+            },
+            close: () => {
+                console.log('Server closed');
+            }
+        };
+
+        const app = {
+            use: (middleware) => {
+                console.log('Middleware added:', middleware);
+            },
+            get: (path, callback) => {
+                console.log('Route added:', path);
+            },
+            post: (path, callback) => {
+                console.log('Route added:', path);
+            },
+            put: (path, callback) => {
+                console.log('Route added:', path);
+            },
+            delete: (path, callback) => {
+                console.log('Route added:', path);
+            },
+            options: (path, callback) => {
+                console.log('Route added:', path);
+            }
+        };
+
+        const bareServer = {
+            shouldRoute: (req) => {
+                return req.url.startsWith('/bare/');
+            },
+            routeRequest: (req, res) => {
+                console.log('Routing request:', req.url);
+            },
+            routeUpgrade: (req, socket, head) => {
+                console.log('Routing upgrade:', req.url);
+            },
+            close: () => {
+                console.log('Bare server closed');
+            }
+        };
+
+        // Simulate server setup
+        const __dirname = '/';
+        const PORT = 8080;
+
+        app.use((req, res, next) => {
+            console.log('Middleware executed:', req.url);
+            next();
+        });
+
+        app.get('/', (req, res) => {
+            console.log('GET /');
+            loadPage('/');
+        });
+
+        app.get('/search', (req, res) => {
+            console.log('GET /search');
+            loadPage('/search');
+        });
+
+        app.get('/a', (req, res) => {
+            console.log('GET /a');
+            loadPage('/a');
+        });
+
+        app.get('/g', (req, res) => {
+            console.log('GET /g');
+            loadPage('/g');
+        });
+
+        app.get('/settings', (req, res) => {
+            console.log('GET /settings');
+            loadPage('/settings');
+        });
+
+        app.get('/settings/general', (req, res) => {
+            console.log('GET /settings/general');
+            loadPage('/settings/general');
+        });
+
+        app.get('/404', (req, res) => {
+            console.log('GET /404');
+            loadPage('/404');
+        });
+
+        app.use((req, res, next) => {
+            console.log('404 Middleware executed:', req.url);
+            loadPage('/404');
+        });
+
+        server.listen(PORT, () => {
+            console.log(`Server listening on port ${PORT}`);
+        });
+
+        // Simulate shutdown
+        function shutdown() {
+            console.log('Shutting down server');
+            server.close();
+            bareServer.close();
+        }
+
+        // Simulate process events
+        window.addEventListener('beforeunload', (event) => {
+            shutdown();
+        });
+    </script>
+</body>
+</html>
