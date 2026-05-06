@@ -1,93 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
+<button onclick="window.location.href='activities.html'">Info</button> 
+<script>
+    function blank(){
+      (function () {var url = document.URL; var urlObj = new window.URL(window.location.href); win = window.open(); win.document.body.style.margin = "0"; win.document.body.style.height = "100vh"; var iframe = win.document.createElement("iframe"); iframe.style.border = "none"; iframe.style.width = "100%"; iframe.style.height = "100%"; iframe.style.margin = "0"; iframe.referrerpolicy = "no-referrer"; iframe.allow = "fullscreen"; iframe.src = url.toString(); win.document.body.appendChild(iframe); var script = win.document.createElement("script"); script.src = ""; win.document.body.appendChild(script); })();
+    }
+    </script>
+    <button onclick="blank();">More...</button>
+<title>Calculator</title>
+<style>
+    button {
+      font-size: 1.2rem; 
+      padding: 0.8rem 1.2rem; 
+      border: none; 
+      border-radius: 0.5rem; 
+      background-color: #ffffff; 
+      color: #000000; 
+      cursor: pointer; 
+      transition: all 0.2s ease-in-out; 
+    }
 
-        input[type="text"] {
-            padding: 10px;
-            width: 80%;
-            margin-right: 10px;
-            font-size: 16px;
-        }
+    button:hover {
+      transform: translateY(-2px); 
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.js" integrity="sha512-BbVEDjbqdN3Eow8+empLMrJlxXRj5nEitiCAK5A1pUr66+jLVejo3PmjIaucRnjlB0P9R3rBUs3g5jXc8ti+fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js" integrity="sha512-iphNRh6dPbeuPGIrQbCdbBF/qcqadKWLa35YPVfMZMHBSI6PLJh1om2xCTWhpVpmUyb4IvVS9iYnnYMkleVXLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+    body { background-color: #000000; }
 
-        button {
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <h1>Enter a Website URL</h1>
-    <input type="text" id="urlInput" placeholder="Enter URL (e.g., https://example.com)" required />
-    <button onclick="openIframePage()">Open Fullscreen iFrame</button>
-
-    <script>
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/";
-        }
-
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        function scramble(url, key) {
-            return btoa([...url].map((char, i) => String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(i % key.length))).join(''));
-        }
-
-        function ensureHttps(url) {
-            if (!/^https?:\/\//i.test(url)) {
-                return 'https://' + url;
-            }
-            return url;
-        }
-
-        function openIframePage() {
-            let url = document.getElementById('urlInput').value.trim();
-
-            if (url !== "") {
-                url = ensureHttps(url);
-
-                let scrambleKey = getCookie('scrambleKey');
-                if (!scrambleKey) {
-                    scrambleKey = Math.random().toString(36).substring(2, 15);
-                    setCookie('scrambleKey', scrambleKey, 7);
+   table {
+                 border: 1px solid black;
+                        margin-left: auto;
+                        margin-right: auto;
                 }
 
-                const scrambledUrl = scramble(url, scrambleKey);
+                input[type="button"] {
+                        width: 100%;
+                        padding: 20px 40px;
+                        background-color: rgb(255, 255, 255);
+                        color: rgb(0, 0, 0);
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: none;
+                        border-radius: 5px;
+                }
 
-                window.open(`education.html?url=${encodeURIComponent(scrambledUrl)}`, '_blank');
-            } else {
-                alert("Please enter a valid URL.");
-            }
-        }
+                input[type="text"] {
+                        padding: 20px 30px;
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: none;
+                        border-radius: 5px;
+                        border: 2px solid black;
+                }
+</style>
+<table id="calcu">
+  <tr>
+    <td colspan="3"><input type="text" id="result"></td>
+    <td><input type="button" value="c" onclick="clr()"></td>
+  </tr>
+  <tr>
+    <td><input type="button" value="1" onclick="dis('1')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="2" onclick="dis('2')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="3" onclick="dis('3')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="/" onclick="dis('/')" onkeydown="myFunction(event)"></td>
+  </tr>
+  <tr>
+    <td><input type="button" value="4" onclick="dis('4')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="5" onclick="dis('5')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="6" onclick="dis('6')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="*" onclick="dis('*')" onkeydown="myFunction(event)"></td>
+  </tr>
+  <tr>
+    <td><input type="button" value="7" onclick="dis('7')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="8" onclick="dis('8')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="9" onclick="dis('9')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="-" onclick="dis('-')" onkeydown="myFunction(event)"></td>
+  </tr>
+  <tr>
+    <td><input type="button" value="0" onclick="dis('0')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="." onclick="dis('.')" onkeydown="myFunction(event)"></td>
+    <td><input type="button" value="=" onclick="solve()"></td>
+    <td><input type="button" value="+" onclick="dis('+')" onkeydown="myFunction(event)"></td>
+  </tr>
+</table>
+<script>
+                    function dis(val) {
+                        document.getElementById("result").value += val
+                }
 
-         document.getElementById('urlInput').addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                openIframePage();
-            }
-        });
-    </script>
-</body>
-</html>
+                function myFunction(event) {
+                        if (event.key == '0' || event.key == '1'
+                                || event.key == '2' || event.key == '3'
+                                || event.key == '4' || event.key == '5'
+                                || event.key == '6' || event.key == '7'
+                                || event.key == '8' || event.key == '9'
+                                || event.key == '+' || event.key == '-'
+                                || event.key == '*' || event.key == '/')
+                                document.getElementById("result").value += event.key;
+                }
+  
+
+                var cal = document.getElementById("calcu");
+                cal.onkeyup = function (event) {
+                        if (event.keyCode === 13) {
+                                console.log("Enter");
+                                let x = document.getElementById("result").value
+                                console.log(x);
+                                solve();
+                        }
+                }
+
+                function solve() {
+                        let x = document.getElementById("result").value
+                        let y = math.evaluate(x)
+                        document.getElementById("result").value = y
+                }
+
+                function clr() {
+                        document.getElementById("result").value = ""
+                }
+</script>
